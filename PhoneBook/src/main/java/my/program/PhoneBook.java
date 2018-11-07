@@ -45,7 +45,7 @@ class PhoneBook {
     }
 
     void writeToCSV(String csv){
-        try(FileWriter writer = new FileWriter(csv)){
+        try(FileWriter writer = new FileWriter(csv,false)){
             //String lineSeparator = new System.getProperty("line.separator");
             for (User i:book) {
                 String out = i.toStringInFile();

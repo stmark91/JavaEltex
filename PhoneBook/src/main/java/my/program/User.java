@@ -1,5 +1,5 @@
 package my.program;
-abstract class User {
+abstract class User implements Interface {
     private String fio;
     private String phone;
 

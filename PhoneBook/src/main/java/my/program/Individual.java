@@ -1,6 +1,6 @@
 package my.program;
 
-final class Individual extends User {
+final class Individual extends User implements Interface {
     private String sex;
 
     Individual(String a, String b, String c) {

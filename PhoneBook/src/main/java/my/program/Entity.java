@@ -1,6 +1,6 @@
 package my.program;
 
-final class Entity extends User {
+final class Entity extends User implements Interface {
     private int inn;
 
     Entity(String a, String b, int c) {
