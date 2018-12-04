@@ -7,7 +7,7 @@ public class Main {
         Scanner in = new Scanner(System.in);
         PhoneBook pb = new PhoneBook();
         boolean flag = true;
-        String csv = "data.csv";
+        String csv = "Users.csv";
         while(flag){
             System.out.println("1) Add Individual");
             System.out.println("2) Add Entity");
@@ -16,7 +16,9 @@ public class Main {
             System.out.println("5) View all users");
             System.out.println("6) Read from CSV");
             System.out.println("7) Write in CSV");
-            System.out.println("8) Exit");
+            System.out.println("8) Add call for user:");
+            System.out.println("9) View journal for user:");
+            System.out.println("0) Exit");
             String s = in.next();
             switch (s){
                 case "1":{
@@ -94,11 +96,80 @@ public class Main {
                     break;
                 }
                 case "8":{
+                    User userq, userd;
+                    int id = 1;
+                    System.out.println("Write FIO or Name:");
+                    String f = in.next();
+                    userq = pb.search2(f);
+                    System.out.println("Enter call time:");
+                    int time = in.nextInt();
+                    System.out.println("Enter the number of convives:");
+                    int n = in.nextInt();
+                    if(n == 0) break;
+                    if(n == 1){
+                        System.out.println("Enter name your convive:");
+                        String a = in.next();
+                        userd = pb.search2(a);
+                        //int id2 = u2.journal.log.size();
+                        int id1 = 1;
+                        int id2 = 1;
+                        System.out.println(userq.toString());
+                        System.out.println(userd.toString());
+                        System.out.println(id1);
+                        System.out.println(time);
+                        try {
+                            userq.journal.addCall(id1,userq,userd,time);
+                            userd.journal.addCall(id2,userd,userq,time);
+                        }catch (Exception e){
+                            //e.getMessage();
+                            System.out.println(e.getMessage());
+                        }
+                        //userq.journal.addCall(id1,userq,userd,time);
+                        //userd.journal.addCall(id2,userd,userq,time);
+                    }else{
+                        User[] array = new User[n];
+                        User tmp;
+                        User u = userq;
+                        for(int i=0;i<n;i++){
+                            System.out.print("Enter name your convive №");
+                            System.out.println(i+1);
+                            String a = in.next();
+                            array[i] = pb.search2(a);
+
+                        }
+                        u.journal.addConf(id,time,array);
+                        for(int i=0;i<n;i++){
+                            tmp = array[i];
+                            array[i] = u;
+                            u = tmp;
+                            id = userq.journal.log.size();
+                            u.journal.addConf(id,time,array);
+                        }
+
+                    }
+                    break;
+                }
+                case "9":{
+                    System.out.println("Write FIO or Name:");
+                    String f = in.next();
+                    User u1 = pb.search2(f);
+                    try {
+                        u1.journal.viewAll();
+                    }catch (Exception e){
+                        e.getMessage();
+                        System.out.println(e);
+                    }
+                    break;
+                }
+                case "0":{
                     flag = false;
                     break;
                 }
             }
         }
+    }
+    private static void connectDB (){
+        String url = "jdbc:mysql://localhost:3306/";
     }
     private static boolean isDigit(String s) throws NumberFormatException {
         try {

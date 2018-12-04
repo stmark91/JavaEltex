@@ -2,6 +2,7 @@ package my.program;
 abstract class User implements Interface {
     private String fio;
     private String phone;
+    CallLog journal;
 
     User(String a, String b){
         setFio(a);

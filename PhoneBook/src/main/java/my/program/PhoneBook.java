@@ -11,6 +11,7 @@ class PhoneBook {
         for (User i: book){
             t = i.toString();
             System.out.println(t);
+            //i.journal.viewAll();
         }
     }
 
@@ -44,6 +45,16 @@ class PhoneBook {
         return null;
     }
 
+    User search2(String f){
+        for (User i:book) {
+            t = i.getFio();
+            if(f.equals(t)){
+                return i;
+            }
+        }
+        return null;
+    }
+
     void writeToCSV(String csv){
         try(FileWriter writer = new FileWriter(csv,false)){
             //String lineSeparator = new System.getProperty("line.separator");
@@ -54,5 +65,25 @@ class PhoneBook {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    void addCall(int id, String f, String s, int time){
+        User u1, u2;
+        for (User i:book) {
+            t = i.getFio();
+            if(f.equals(t)){
+                u1 = i;
+                break;
+            }
+        }
+        for (User j:book) {
+            t = j.getFio();
+            if(s.equals(t)){
+                u2 = j;
+                break;
+            }
+        }
+        u1.journal.addCall(id,u1,u2,time);
+
     }
 }
