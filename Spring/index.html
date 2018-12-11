@@ -1,0 +1,23 @@
+<html>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.2/angular.min.js"></script>
+<script type="text/javascript">
+	var app = angular.module("Hello",[]);
+	app.controller("HelloController",function ($scope,$http) {
+		$scope send = function(){
+			$http({
+				method:"GET",
+				URL:"/hello",
+				data:$scope.user.then(function(data){$scope user = data;},function(error){$scope.user="Error:" + error;})
+			})
+		}
+	})
+</script>
+<body ng-app="Hello" ng-controller="HelloController">
+	<form ng-submit=send()>
+		<input type="text" ng-model="user">
+		{{user}}
+		<input type="submit">
+	</form>
+	
+</body>
+</html>
