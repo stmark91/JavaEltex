@@ -11,7 +11,6 @@ class PhoneBook {
         for (User i: book){
             t = i.toString();
             System.out.println(t);
-            //i.journal.viewAll();
         }
     }
 
@@ -67,23 +66,4 @@ class PhoneBook {
         }
     }
 
-    void addCall(int id, String f, String s, int time){
-        User u1, u2;
-        for (User i:book) {
-            t = i.getFio();
-            if(f.equals(t)){
-                u1 = i;
-                break;
-            }
-        }
-        for (User j:book) {
-            t = j.getFio();
-            if(s.equals(t)){
-                u2 = j;
-                break;
-            }
-        }
-        u1.journal.addCall(id,u1,u2,time);
-
-    }
 }

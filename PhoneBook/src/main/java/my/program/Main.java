@@ -1,9 +1,11 @@
 package my.program;
 import java.io.*;
+import java.sql.*;
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
+        connectDB();
         Scanner in = new Scanner(System.in);
         PhoneBook pb = new PhoneBook();
         boolean flag = true;
@@ -97,10 +99,10 @@ public class Main {
                 }
                 case "8":{
                     User userq, userd;
-                    int id = 1;
                     System.out.println("Write FIO or Name:");
                     String f = in.next();
                     userq = pb.search2(f);
+                    int id1 = userq.log.size();
                     System.out.println("Enter call time:");
                     int time = in.nextInt();
                     System.out.println("Enter the number of convives:");
@@ -110,22 +112,13 @@ public class Main {
                         System.out.println("Enter name your convive:");
                         String a = in.next();
                         userd = pb.search2(a);
-                        //int id2 = u2.journal.log.size();
-                        int id1 = 1;
-                        int id2 = 1;
-                        System.out.println(userq.toString());
-                        System.out.println(userd.toString());
-                        System.out.println(id1);
-                        System.out.println(time);
+                        int id2 = userd.log.size();
                         try {
-                            userq.journal.addCall(id1,userq,userd,time);
-                            userd.journal.addCall(id2,userd,userq,time);
+                            userq.addCall(id1,userq,userd,time);
+                            userd.addCall(id2,userd,userq,time);
                         }catch (Exception e){
-                            //e.getMessage();
                             System.out.println(e.getMessage());
                         }
-                        //userq.journal.addCall(id1,userq,userd,time);
-                        //userd.journal.addCall(id2,userd,userq,time);
                     }else{
                         User[] array = new User[n];
                         User tmp;
@@ -137,13 +130,14 @@ public class Main {
                             array[i] = pb.search2(a);
 
                         }
-                        u.journal.addConf(id,time,array);
+                        int id = u.log.size();
+                        u.addConf(id,time,array);
                         for(int i=0;i<n;i++){
                             tmp = array[i];
                             array[i] = u;
                             u = tmp;
-                            id = userq.journal.log.size();
-                            u.journal.addConf(id,time,array);
+                            id = u.log.size();
+                            u.addConf(id,time,array);
                         }
 
                     }
@@ -154,7 +148,7 @@ public class Main {
                     String f = in.next();
                     User u1 = pb.search2(f);
                     try {
-                        u1.journal.viewAll();
+                        u1.viewCalls();
                     }catch (Exception e){
                         e.getMessage();
                         System.out.println(e);
@@ -169,7 +163,91 @@ public class Main {
         }
     }
     private static void connectDB (){
-        String url = "jdbc:mysql://localhost:3306/";
+        Scanner in = new Scanner(System.in);
+        boolean flag = true;
+        String URL = "jdbc:mysql://localhost:3306/eltex?serverTimezone=UTC&useSSL=false";
+        String UserName = "root";
+        String Password = "mark91";
+        try(Connection connection = DriverManager.getConnection(URL,UserName,Password)) {
+            System.out.println("Connected");
+            Statement st = connection.createStatement();
+            while (flag) {
+                System.out.println("1)View all");
+                System.out.println("2)Add user");
+                System.out.println("3)Remove user");
+                String n = in.next();
+                switch (n) {
+                    case "1": {
+                        ResultSet resultSet = st.executeQuery("select * from user");
+                        while (resultSet.next()) {
+                            int id = resultSet.getInt(1);
+                            String fio = resultSet.getString(2);
+                            String phone = resultSet.getString(3);
+                            String sex = resultSet.getString(4);
+                            String inn = resultSet.getString(5);
+                            System.out.print(id + " ");
+                            System.out.print(fio + " ");
+                            System.out.print(phone + " ");
+                            System.out.print(sex + " ");
+                            System.out.println(inn);
+                        }
+                        break;
+                    }
+                    case "2": {
+                        System.out.println("1) Add Individual");
+                        System.out.println("2) Add Entity");
+                        System.out.println("0) Exit");
+                        String s = in.next();
+                        switch (s) {
+                            case "1": {
+                                System.out.println("Write FIO, phone and sex:");
+                                String f = in.next();
+                                String p = in.next();
+                                String c = in.next();
+                                String q = "insert user (fio, phone, sex)" +
+                                        "value (\"" + f + "\", " +
+                                        "\"" + p +"\", " +
+                                        "\"" + c + "\");";
+                                st.executeQuery(q);
+                                break;
+                            }
+                            case "2": {
+                                System.out.println("Write Name, phone and INN:");
+                                String f = in.next();
+                                String p = in.next();
+                                String c = in.next();
+                                String q = "insert user (fio, phone, inn)" +
+                                        "value (\"" + f + "\", " +
+                                        "\"" + p +"\", " +
+                                        "\"" + c + "\");";
+                                st.executeQuery(q);
+                                break;
+                            }
+                            case "0":{
+                                break;
+                            }
+                        }
+                        break;
+                    }
+                    case "3": {
+                        System.out.println("Enter the user ID of the user you want to delete:");
+                        String f = in.next();
+                        String q = "DELETE FROM user WHERE id = " + f + ";";
+                        st.executeQuery(q);
+                        break;
+                    }
+                    case "0": {
+                        flag = false;
+                        break;
+                    }
+
+                }
+            }
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+        }
     }
     private static boolean isDigit(String s) throws NumberFormatException {
         try {

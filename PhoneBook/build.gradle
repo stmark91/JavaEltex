@@ -4,7 +4,10 @@ apply plugin:"application"
 task wrapper(type: Wrapper){
     gradleVersion = "4.10.2"
 }
+dependencies{
+    compile files("lib/mysql-connector-java-8.0.13.jar")
+}
 run{
-    standardInput = System.in
+   standardInput = System.in
 }
 mainClassName = "my.program.Main"
