@@ -1,0 +1,10 @@
+ol>li{ 
+display:block; 
+} 
+ol{ 
+counter-reset:item; 
+} 
+ol>li:before{ 
+counter-increment:item; 
+content:counters(item,".") ". "; 
+}
